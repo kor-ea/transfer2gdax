@@ -1,0 +1,21 @@
+{
+    "name": "sobit/insights",
+    "description": "Convenient interface for using New Relic Insights",
+    "keywords": ["new relic", "insights"],
+    "homepage": "https://github.com/sobit/insights",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sobit Akhmedov",
+            "email": "sobit.akhmedov@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "jms/serializer": "0.16.*",
+        "guzzlehttp/guzzle": "^5.3.1"
+    },
+    "autoload": {
+        "psr-4": { "": "src/" }
+    }
+}
