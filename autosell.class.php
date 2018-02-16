@@ -38,7 +38,9 @@ class autoSell {
   public function cancelOrder($orderid){
     return $this->gdax->cancel_order($orderid,$this->pair);
   }
-  
+   public function getRate(){
+    return $this->gdax->fetch_ticker($this->pair)['bid'];
+  }
   
 }
 

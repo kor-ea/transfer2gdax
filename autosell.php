@@ -76,10 +76,18 @@ foreach($orders as $order){
 
 echo "no orders, can sell\n";
 //Calculating sell amount
+try{
+  $curprice = $autosell->getRate();
+}catch (\Exception $e){
+  sendEvent2NR('Getting rate error');  
+  exit('Error while getting rate: '.$e->getMessage());
+} 
+echo "current rate $curprice\n";
 $amount = $btcbalance;
-if($btcbalance > $autosell->maxcap){
-  $amount = $autosell->maxcap;
+if($btcbalance*$curprice > $autosell->maxcap){
+  $amount = round($autosell->maxcap / $curprice,8);
 }
+echo "amount to sell $amount\n";
 //Creating market order
 try{
   $order = $autosell->sellBtc($amount);  
