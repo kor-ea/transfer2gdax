@@ -23,7 +23,7 @@ function sendEvent2NR($name,$amount = null,$cost = null){
 }
 
 echo "\n----START----\n";
-sendEvent2NR('Start');
+sendEvent2NR('Start transfer to '.TRANSFERTO);
 
 $autosell = new autosell(APIKEY,APISECRET,APIPASSWORD,MAXCAP,PAIR);
 
