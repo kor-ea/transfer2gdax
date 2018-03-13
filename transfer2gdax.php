@@ -1,7 +1,7 @@
 <?php 
 include "autosell.class.php";
 include "insights.class.php";
-include ".config.php";
+include "config.php";
 
 \Doctrine\Common\Annotations\AnnotationRegistry::registerLoader('class_exists');
 use Sobit\Insights\Client\Client;
