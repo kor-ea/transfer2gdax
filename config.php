@@ -11,4 +11,8 @@ define('PAIR','BTC/USD');
 define('ACCOUNTID', '');
 define('INSERTKEY', '');
 define('QUERYKEY', '');
+define('MINFUNDS',25000);
+//define('TESTNET',' --testnet '); //for testing
+define('TESTNET','');
+define('TRANSFERTO','');
 ?>
