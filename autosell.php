@@ -51,23 +51,23 @@ if(!empty($argv[1])){
   }
 }
 
-echo "checking USD balance\n";
-try{
-  $usdbalance = floor($autosell->checkBalance('USD'));
-} catch(\Exception $e) {
-  sendEvent2NR('Balance checking error');  
-  exit('Error while checking balance: '.$e->getMessage());
-}
+// echo "checking USD balance\n";
+// try{
+//   $usdbalance = floor($autosell->checkBalance('USD'));
+// } catch(\Exception $e) {
+//   sendEvent2NR('Balance checking error');  
+//   exit('Error while checking balance: '.$e->getMessage());
+// }
 
-echo "available USD balance $usdbalance\n";
-sendEvent2NR('USD balance',$usdbalance);
+// echo "available USD balance $usdbalance\n";
+// sendEvent2NR('USD balance',$usdbalance);
 
-if($usdbalance >= MINWITHDRAWAL){
-  echo "Withdraw $usdbalance\n";
-  $result = $autosell->withdraw($usdbalance);
-  sendEvent2NR('Withdraw',$usdbalance);
-  //print_r($result);
-}  
+// if($usdbalance >= MINWITHDRAWAL){
+//   echo "Withdraw $usdbalance\n";
+//   $result = $autosell->withdraw($usdbalance);
+//   sendEvent2NR('Withdraw',$usdbalance);
+//   //print_r($result);
+// }  
 
 
 echo "checking BTC balance\n";
