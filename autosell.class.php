@@ -5,13 +5,15 @@ use ccxt\ccxt;
 class autoSell {
 
   public $maxcap = 0;
+  public $paymentmethod = '';
   protected $pair = '';
   protected $gdax;
   
-  public function __construct($apikey,$apisecret,$apipassword,$maxcap,$pair){
+  public function __construct($apikey,$apisecret,$apipassword,$maxcap,$pair,$paymentmethod){
     date_default_timezone_set ('UTC');
     $this->maxcap = $maxcap;
     $this->pair = $pair;
+    $this->paymentmethod = $paymentmethod;
     $ccxtclass = '\ccxt\gdax';
     $ccxt = new $ccxtclass(array('apiKey'=>$apikey,'secret'=>$apisecret,'password'=>$apipassword));;
     $ccxt->urls['api'] = $ccxt->urls['test'];
@@ -41,7 +43,12 @@ class autoSell {
    public function getRate(){
     return $this->gdax->fetch_ticker($this->pair)['bid'];
   }
-  
+   public function getpaymentmethods(){
+    return $this->gdax->get_payment_methods();
+  }
+ public function withdraw($amount){
+    return $this->gdax->withdraw('USD',$amount,null,null,['payment_method_id'=>$this->paymentmethod]);
+  }
 }
 
 

@@ -9,7 +9,7 @@ use Sobit\Insights\EventManager;
 
 //Function for sending events to New Relic
 function sendEvent2NR($name,$amount = null,$cost = null){
-  
+   
 // initialize core classes
   $client       = new Client(new GuzzleHttp\Client(), ACCOUNTID, INSERTKEY, QUERYKEY);
   $eventManager = new EventManager($client, JMS\Serializer\SerializerBuilder::create()->build(),'autosell');
@@ -25,7 +25,7 @@ function sendEvent2NR($name,$amount = null,$cost = null){
 echo "\n----START----\n";
 sendEvent2NR('Start');
 
-$autosell = new autosell(APIKEY,APISECRET,APIPASSWORD,MAXCAP,PAIR);
+$autosell = new autosell(APIKEY,APISECRET,APIPASSWORD,MAXCAP,PAIR,PAYMENTMETHOD);
 
 //For cancelling pending orders use 'cancelorders' argument in command line
 $cancelorders = false;
@@ -35,11 +35,42 @@ if(!empty($argv[1])){
       echo "will cancel pending orders\n";
       $cancelorders = true;
       break;
+    case "paymentmethods":
+      echo "getting withdrawal methods\n";
+      try{
+        $methods = $autosell->getpaymentmethods();
+      } catch(\Exception $e) {
+        exit('Error while getting payment methods: '.$e->getMessage());
+      }
+      foreach($methods as $method){
+          echo "id: ".$method['id']." type: ".$method["type"]." name: ".$method["name"]."\n";
+      }
+      
+      exit;
+      
   }
 }
 
+echo "checking USD balance\n";
+try{
+  $usdbalance = floor($autosell->checkBalance('USD'));
+} catch(\Exception $e) {
+  sendEvent2NR('Balance checking error');  
+  exit('Error while checking balance: '.$e->getMessage());
+}
 
-echo "checking balance\n";
+echo "available USD balance $usdbalance\n";
+sendEvent2NR('USD balance',$usdbalance);
+
+if($usdbalance >= MINWITHDRAWAL){
+  echo "Withdraw $usdbalance\n";
+  $result = $autosell->withdraw($usdbalance);
+  sendEvent2NR('Withdraw',$usdbalance);
+  //print_r($result);
+}  
+
+
+echo "checking BTC balance\n";
 try{
   $btcbalance = $autosell->checkBalance('BTC');
 } catch(\Exception $e) {
@@ -48,11 +79,11 @@ try{
 }
 
 if($btcbalance == 0){
-  exit("no funds, exiting\n");
+  exit("no BTC, exiting\n");
 }  
 
-echo "available balance $btcbalance\n";
-sendEvent2NR('Balance',$btcbalance);
+echo "available BTC balance $btcbalance\n";
+sendEvent2NR('BTC balance',$btcbalance);
 
 echo "checking for pending orders\n";
 try {
