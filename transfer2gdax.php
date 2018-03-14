@@ -9,7 +9,7 @@ use Sobit\Insights\EventManager;
 
 //Function for sending events to New Relic
 function sendEvent2NR($name,$amount = null,$cost = null){
-  
+return true;  
 // initialize core classes
   $client       = new Client(new GuzzleHttp\Client(), ACCOUNTID, INSERTKEY, QUERYKEY);
   $eventManager = new EventManager($client, JMS\Serializer\SerializerBuilder::create()->build(),'transfer2gdax');
@@ -23,17 +23,17 @@ function sendEvent2NR($name,$amount = null,$cost = null){
 }
 
 echo "\n----START----\n";
-sendEvent2NR('Start transfer to '.TRANSFERTO);
+sendEvent2NR('Start');
 
-$autosell = new autosell(APIKEY,APISECRET,APIPASSWORD,MAXCAP,PAIR);
+$autosell = new autosell(APIKEY,APISECRET,APIPASSWORD,MAXCAP,PAIR,PAYMENTMETHOD);
 
 echo "checking balance\n";
 
 exec('/usr/bin/electrum getbalance'.TESTNET,$output);
 $balance = json_decode(implode('',$output));
 $confirmed = $balance->confirmed;
-
-echo "available balance $confirmed ($balance->unconfirmed)\n";
+$unconfirmed = (property_exists('balance','unconfirmed'))?$balance->unconfirmed:0;
+echo "available balance $confirmed ($unconfirmed)\n";
 
 
 sendEvent2NR('Balance',$confirmed);
@@ -71,4 +71,3 @@ if ($result_json[0] == 'true'){
 echo "----DONE----\n\n";
 
 ?>
-
