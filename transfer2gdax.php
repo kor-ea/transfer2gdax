@@ -56,7 +56,7 @@ if($confirmed*$curprice < MINFUNDS){
 
 echo "amount to transfer $confirmed\n";
 $output = [];
-exec("/usr/bin/electrum ".TESTNET." payto ".TRANSFERTO." $confirmed | /usr/bin/electrum ".TESTNET." broadcast -",$output);
+exec("/usr/bin/electrum ".TESTNET." payto ".TRANSFERTO." ! | /usr/bin/electrum ".TESTNET." broadcast -",$output);
 $result = implode('',$output);
 $result_json = json_decode($result);
 if ($result_json[0] == 'true'){
